@@ -1,0 +1,26 @@
+﻿@page
+@model RSSAPP.Pages.RssPages.FirstPageModel
+@{
+}
+
+    <form method="post">
+
+
+        <label> Name : </label>
+        <input type="text" asp-for="InputModel.Name" placeholder="Name" />
+        <br />
+        <label> RSS : </label>
+        <input type="text" asp-for="InputModel.URL" placeholder="URL" />
+        <br />
+        <label> Priority : </label>
+        <select asp-for="InputModel.Priority">
+            <option value="-1">Priority</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+        <br />
+        <button asp-page-handler="Save">SAVE</button>
+    </form>
+

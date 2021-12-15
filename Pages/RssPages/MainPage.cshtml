@@ -1,0 +1,75 @@
+﻿@page
+@model RSSAPP.Pages.RssPages.MainPageModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <select onchange="orderBy(event)" asp-for="selectedSource">
+        <option value="">Haber Kaynağı</option>
+        @foreach (var item in Model.sources)
+        {
+            <option value="@item.URL">@item.Name</option>
+        }
+
+    </select>
+</head>
+<body>
+
+    <marquee direction="left" width="100%" height="500" behavior="alternate">
+    <div id="news"></div>
+    </marquee>
+
+
+    <script type="text/javascript">
+        function orderBy(event) {
+            var value = event.target.value;
+            console.log('value');
+            loadNews(value);
+            
+        }
+        function loadNews(rss) {
+            fetch(rss)
+                .then(response => response.text())
+                .then(str => new DOMParser().parseFromString(str, "text/xml"))
+                .then(data => {
+
+                    console.log('data', data);
+                    const items = data.querySelectorAll("item");
+
+                    console.log('items', items);
+
+                    let html = '';
+
+
+                    items.forEach(el => {
+
+                        let title = el.querySelector("title").innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+
+                        const description = el.querySelector("description").innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+
+                        html += `
+                                <div>
+                                    <img src="${el.querySelector("link").innerHTML}" alt="">
+                                    <h2>
+                                        <a href="${el.querySelector("link").innerHTML}" target="_blank" rel="noopener">
+                                    ${title}
+                                    </a>
+                                    <p style="font-weight: normal;">
+                                    ${description}
+                                    </p>
+                                    </h2>
+                                </div>`;
+                    });
+
+
+                    document.getElementById("news").innerHTML = html;
+
+                })
+
+        }
+    </script>
+
+</body>
+</html>
+
